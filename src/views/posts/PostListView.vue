@@ -29,8 +29,13 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const posts = ref([]);
-const fetchPost = () => {
-	posts.value = getPosts();
+const fetchPost = async () => {
+	try {
+		const { data } = await getPosts();
+		posts.value = data;
+	} catch (error) {
+		console.error(error);
+	}
 };
 fetchPost();
 const goPage = id => {
