@@ -12,6 +12,7 @@
 					:content="item.content"
 					:created-at="item.createdAt"
 					@click="goPage(item.id)"
+					@modal="openModal(item)"
 				></PostItem>
 			</template>
 		</AppGrid>
@@ -22,6 +23,16 @@
 			@page="page => (params._page = page)"
 		>
 		</AppPagination>
+
+		<Teleport to="#modal">
+			<PostModal
+				v-model="show"
+				:title="modalTitle"
+				:content="modalContent"
+				:createdAt="modalCreatedAt"
+			></PostModal>
+		</Teleport>
+
 		<template v-if="posts && posts.length > 0">
 			<hr class="my-5" />
 			<AppCard>
@@ -41,7 +52,7 @@ import PostFilter from '@/components/posts/PostFilter.vue';
 import { getPosts } from '@/api/posts';
 import { computed, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-
+import PostModal from '@/components/posts/PostModal.vue';
 const router = useRouter();
 const posts = ref([]);
 const params = ref({
@@ -70,6 +81,18 @@ const fetchPosts = async () => {
 watchEffect(fetchPosts);
 const goPage = id => {
 	router.push(`/posts/${id}`);
+};
+
+//modal
+const show = ref(false);
+const modalTitle = ref('');
+const modalContent = ref('');
+const modalCreatedAt = ref('');
+const openModal = ({ title, content, createdAt }) => {
+	show.value = true;
+	modalTitle.value = title;
+	modalContent.value = content;
+	modalCreatedAt.value = createdAt;
 };
 </script>
 
