@@ -19,6 +19,7 @@
 						:created-at="item.createdAt"
 						@click="goPage(item.id)"
 						@modal="openModal(item)"
+						@preview="selectPreview(item.id)"
 					></PostItem>
 				</template>
 			</AppGrid>
@@ -40,10 +41,10 @@
 			></PostModal>
 		</Teleport>
 
-		<template v-if="posts && posts.length > 0">
+		<template v-if="previewId">
 			<hr class="my-5" />
 			<AppCard>
-				<PostDetailView :id="posts[0].id"></PostDetailView>
+				<PostDetailView :id="previewId"></PostDetailView>
 			</AppCard>
 		</template>
 	</div>
@@ -59,6 +60,9 @@ import PostModal from '@/components/posts/PostModal.vue';
 import { useAxios } from '@/hooks/useAxios';
 
 const router = useRouter();
+
+const previewId = ref(null);
+const selectPreview = id => (previewId.value = id);
 
 const params = ref({
 	_sort: 'createdAt',
