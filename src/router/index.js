@@ -1,8 +1,4 @@
-import {
-	createRouter,
-	createWebHashHistory,
-	createWebHistory,
-} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import AboutView from '@/views/AboutView.vue';
 import PostCreateView from '@/views/posts/PostCreateView.vue';
@@ -14,6 +10,7 @@ import NestedView from '@/views/nested/NestedView.vue';
 import Nested1View from '@/views/nested/Nested1View.vue';
 import Nested2View from '@/views/nested/Nested2View.vue';
 import NestedHomeView from '@/views/nested/NestedHomeView.vue';
+import MyPage from '@/views/MyPage.vue';
 
 const routes = [
 	{
@@ -51,11 +48,6 @@ const routes = [
 		component: postListView,
 	},
 	{
-		path: '/:pathMatch(.*)*',
-		name: 'NotFound',
-		component: NotFoundView,
-	},
-	{
 		path: '/nested',
 		name: 'NestedView',
 		component: NestedView,
@@ -77,12 +69,33 @@ const routes = [
 			},
 		],
 	},
+	{
+		path: '/my',
+		name: 'MyPage',
+		component: MyPage,
+		beforeEnter: [removeQueryString],
+	},
+	{
+		path: '/:pathMatch(.*)*',
+		name: 'NotFound',
+		component: NotFoundView,
+	},
 ];
+
+function removeQueryString(to) {
+	if (Object.keys(to.query).length > 0) {
+		return { path: to.path, query: {} };
+	}
+}
 
 const router = createRouter({
 	history: createWebHistory('/'),
 	// history: createWebHashHistory(),
 	routes,
 });
+
+// router.beforeEach((to, from) => {
+// 	if (to.name == 'MyPage') return false;
+// });
 
 export default router;
